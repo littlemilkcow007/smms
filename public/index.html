@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入自定义css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -23,7 +25,7 @@
                 <div id="navTitle">
                     <h2>华联超市管理系统</h2>
                     <p>您好，admin</p>
-                    <p><a href="main.html" target="iframeContent">管理首页</a> | <a href="loginOut.html">退出系统</a> </p>
+                    <p><a href="main.html" target="iframeContent">管理首页</a> | <a href="/users/loginOut" onclick="return confirm('确认退出登录？')">退出系统</a> </p>
                 </div>
                 <!-- 导航栏 -->
                 <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" unique-opened="true">

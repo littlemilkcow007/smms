@@ -30,7 +30,8 @@
                         label-width="100px" class="demo-ruleForm">
                         <el-form-item label="所属分类：" prop="sortPart">
                             <el-select v-model="ruleForm2.sortPart" filterable placeholder="---请选择分类---">
-                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                <el-option label="顶级分类" value="0"></el-option>
+                                <el-option v-for="(item,index) in options" :key="index" :label="item.cg_name" :value="item.cg_id">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -38,8 +39,8 @@
                             <el-input v-model="ruleForm2.sortName"></el-input>
                         </el-form-item>
                         <el-form-item label="状态：" prop="sortStatus">
-                            <el-radio v-model="ruleForm2.radio" label="1">启用</el-radio>
-                            <el-radio v-model="ruleForm2.radio" label="2">禁用</el-radio>
+                            <el-radio v-model="ruleForm2.sortStatus" label="1">启用</el-radio>
+                            <el-radio v-model="ruleForm2.sortStatus" label="0">禁用</el-radio>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="submitForm('ruleForm2')">添加</el-button>
@@ -72,37 +73,33 @@
                 ruleForm2: {
                     sortPart:'',
                     sortName: '',
-                    sortStatus: '',
-                    radio: '1'
+                    sortStatus: '1'
                 },
                 rules2: {
                     sortName: [
                         { required: true, message: "请输入分类名称", trigger: 'blur' }
+                    ],
+                    sortPart: [
+                        { required: true, message: "请选择分类", trigger: 'blur' }
                     ]
                 },
-                options: [{
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
+                options:[]
             };
         },
         methods: {
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        //前端验证成功时向后台请求数据
+                        $.get('/sort/add',this.ruleForm2,(data)=>{
+                            //处理数据
+                            if(data.isOk){
+                                alert('添加成功');
+                                location.href='sort_list.html';
+                            }else{
+                                alert('添加失败');
+                            }
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -112,6 +109,11 @@
             resetForm(formName) {
                 this.$refs[formName].resetFields();
             }
+        },
+        mounted(){
+            $.get('/sort/getSort',(data)=>{
+                this.options=data;               
+            })
         }
     })
 </script>

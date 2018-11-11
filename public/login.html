@@ -55,7 +55,6 @@
                     rules: {
                         username:[
                             {required:true,message:'请输入用户名',trigger:'blur'},
-                            {min:8,max:16,message:'用户名必须在8~12位',trigger:'blur'}
                         ],
                         pass: [
                             {required: true, message: '请输入密码', trigger: 'blur'}
@@ -67,7 +66,17 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('submit!');
+                            //前端验证通过时执行
+                            $.post('/users/loginCheck',this.ruleForm,(data)=>{
+                                //接收后端返回的数据进行处理
+                                if(data.isOk){
+                                    alert(data.msg);
+                                    //跳转到后台管理首页
+                                    location.href='index.html';
+                                }else{
+                                    alert(data.msg);
+                                }
+                            })
                         } else {
                             console.log('error submit!!');
                             return false;

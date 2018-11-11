@@ -126,7 +126,7 @@
                         { required: true, message: "请输入会员卡卡号", trigger: 'blur' }
                     ],
                     group: [
-                        { required: true, message: "请选择用户组", trigger: 'blur' }
+                        { required: true, message: "请选择用户组", trigger: 'change' }
                     ]
                 }
             };
@@ -137,7 +137,11 @@
                     if (valid) {
                         //验证成功时执行
                         $.post('/users/add', this.ruleForm2, (data) => {
-                            console.log(data);
+                            if(data.isOk){
+                                console.log(data)
+                            }else{
+                                alert(data.msg);
+                            }
                         })
                     } else {
                         console.log('error submit!!');
