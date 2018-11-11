@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——销售明细</title>
+    <!-- 引入reset样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUi样式 -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入index.css -->
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 详细内容 -->
+        <el-main>
+            <!-- 大卡片 -->
+            <el-card class="box-card">
+                <!-- 大卡片标题 -->
+                <div slot="header" class="clearfix">
+                    <span>销售明细</span>
+                </div>
+                <!-- 大卡片内容 -->
+                <div class="text item">
+                    <!-- 搜索 -->
+                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                        <el-form-item label="开始时间：">
+                            <el-date-picker v-model="ruleForm2.startTime" type="date" placeholder="选择日期">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item label="结束时间：">
+                            <el-date-picker v-model="ruleForm2.endTime" type="date" placeholder="选择日期">
+                            </el-date-picker>（格式：2012-01-01）
+                        </el-form-item>
+                        <!-- <br/> -->
+                        <el-form-item label="关键字：" class="slKeyWord">
+                            <el-input v-model="formInline.user" placeholder=""></el-input> 商品名称，订单号，客户名字，会员卡号
+                        </el-form-item> 
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <!-- 数据中心 -->
+                    <el-table :data="tableData" style="width: 100%" stripe="true">
+                        <el-table-column label="订单号" width="180">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="名称" width="180">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="数量" width="180">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="实际售价" width="180">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="优惠（促销/会员）" width="180">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="退款" width="180">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="销售时间" width="180">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                            </template>
+                        </el-table-column>                           
+                        <el-table-column label="管理" fixed="right" width="180px">
+                            <template slot-scope="scope">
+                                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="primary"
+                                    plain><i class="el-icon-edit"></i>编辑</el-button>
+                                <el-button size="mini" @click="handleDelete(scope.$index, scope.row)" type="danger"
+                                    plain><i class="el-icon-delete"></i>删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <br>
+                    <!-- 页码 -->
+                    <el-pagination background layout="prev, pager, next" :total="40" prev-text='上一页' next-text='下一页'>
+                    </el-pagination>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+</body>
+<!-- 引入jQuery.js -->
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 引入Vue.js -->
+<script src="./javascripts/vue.min.js"></script>
+<!-- 引入elementUI.js -->
+<script src="./javascripts/elementUI.js"></script>
+<script>
+    //读取数据
+    //定义变量存储数据
+    let tableData;
+    $.get('/users/list', (data) => {
+        tableData = data;
+    })
+    //实例化Vue对象
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                ruleForm2: {
+                    startTime:'',
+                    endTime: '',
+                    purchasePrice: ''
+                },
+                tableData: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                    date: '2016-05-04',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                    date: '2016-05-01',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1519 弄'
+                }, {
+                    date: '2016-05-03',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1516 弄'
+                }],
+                formInline: {
+                    user: '',
+                    region: ''
+                }
+            }
+        },
+        methods: {
+            handleEdit(index, row) {
+                console.log(index, row);
+            },
+            handleDelete(index, row) {
+                console.log(index, row);
+            },
+            onSubmit() {
+                console.log('submit!');
+            }
+        }
+
+    })
+</script>
+
+</html>

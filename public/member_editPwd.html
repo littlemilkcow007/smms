@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——密码修改</title>
+    <!-- 引入reset样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUi样式 -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入index.css -->
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 详细内容 -->
+        <el-main>
+            <!-- 大卡片 -->
+            <el-card class="box-card">
+                <!-- 大卡片标题 -->
+                <div slot="header" class="clearfix">
+                    <span>修改账号密码</span>
+                </div>
+                <!-- 大卡片内容 -->
+                <div class="text item">
+                    <el-form label-position="top" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+                        label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="原密码：" prop="oldPass">
+                            <el-input v-model.number="ruleForm2.oldPass"></el-input>
+                        </el-form-item>
+                        <el-form-item label="新密码：" prop="newPass">
+                            <el-input type="password" v-model="ruleForm2.newPass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="新密码：" prop="checkPass">
+                            <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">修改</el-button>
+                            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+</body>
+<!-- 引入jQuery.js -->
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 引入Vue.js -->
+<script src="./javascripts/vue.min.js"></script>
+<!-- 引入elementUI.js -->
+<script src="./javascripts/elementUI.js"></script>
+<script>
+    //实例化Vue对象
+    new Vue({
+        el: '#app',
+        data() {
+            var validatePass2 = (rule, value, callback) => {
+                if (value !== this.ruleForm2.pass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                ruleForm2: {
+                    newPass: '',
+                    checkPass: '',
+                    oldPass: '',
+                },
+                rules2: {
+                    newPass: [
+                        { required: true, message: "请输入新密码", trigger: 'blur' }
+                    ],
+                    checkPass: [
+                        { validator: validatePass2, trigger: 'blur' },
+                        { required: true, message: "请输入确认密码", trigger: 'blur' }
+                    ],
+                    oldPass: [
+                        { required: true, message: "请输入原密码", trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                       //验证成功时执行
+                       $.post('/users/add',this.ruleForm2,(data)=>{
+                           console.log(data);
+                       })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        }
+    })
+</script>
+
+</html>

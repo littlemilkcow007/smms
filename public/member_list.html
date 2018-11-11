@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——账号管理</title>
+    <!-- 引入reset样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUi样式 -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入index.css -->
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 详细内容 -->
+        <el-main>
+            <!-- 大卡片 -->
+            <el-card class="box-card">
+                <!-- 大卡片标题 -->
+                <div slot="header" class="clearfix">
+                    <span>账号管理</span>
+                </div>
+                <!-- 大卡片内容 -->
+                <div class="text item">
+                    <el-table :data="tableData" style="width: 100%">
+                        <el-table-column label="用户ID" width="180" prop='u_id'>
+                            <!--                             <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.u_id }}</span>
+                            </template> -->
+                        </el-table-column>
+                        <el-table-column label="用户名称" width="180" prop='userName'>
+                            <!--                             <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.userName }}</span>
+                            </template> -->
+                        </el-table-column>
+                        <el-table-column label="用户组" width="180" prop='userGroup'>
+                            <!--                             <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.userGroup }}</span>
+                            </template> -->
+                        </el-table-column>
+                        <el-table-column label="创建时间" width="180" prop='createDatetime' :formatter="dateFormat">
+                            <!--                             <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.createDatetime }}</span>
+                            </template> -->
+                        </el-table-column>
+                        <el-table-column label="管理">
+                            <template slot-scope="scope">
+                                <el-button size="mini" @click="handleEdit(scope.row.u_id)" type="primary" plain><i
+                                        class="el-icon-edit"></i>编辑</el-button>
+                                <el-button size="mini" @click="handleDelete(scope.row.u_id)" type="danger" plain><i
+                                        class="el-icon-delete"></i>删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+</body>
+<!-- 引入jQuery.js -->
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 引入Vue.js -->
+<script src="./javascripts/vue.min.js"></script>
+<!-- 引入elementUI.js -->
+<script src="./javascripts/elementUI.js"></script>
+<!-- 引入时间格式 -->
+<script src="./javascripts/moment-with-locales.min.js"></script>
+<script>
+    /*    将ajax请求异步变为同步
+     //读取数据
+        //定义变量存储数据
+        let tableData = [{ userName: '张三', userGroup: '超级管理员' }];
+         new Promise((resolve, reject) => {
+             $.get('/users/list', (data) => {
+                    // reject('err');
+                     resolve(data);
+             })
+         }).then((data)=>{
+             tableData=data; 
+            })*/
+    //实例化Vue对象
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                tableData: []
+            }
+        },
+        methods: {
+            handleEdit(id) {
+                location.href=`member_edit.html?id=${id}`;
+            },
+            handleDelete(id) {
+                //发送ajax请求到后端路由处理数据删除
+                $.get('/users/del', { id }, (data) => {
+                    //处理后端返回的数据
+                    if (data.isOk) {
+                        alert(data.msg);
+                        //调用ajax方法，防止页面全部刷新
+                        this.getAjax();
+
+                    } else {
+                        alert(data.msg);
+                    }
+                })
+            },
+            //时间格式化  
+            dateFormat: function (row, column) {
+                var date = row[column.property];
+                if (date == undefined) {
+                    return "";
+                }
+                return moment(date).format("YYYY-MM-DD HH:mm:ss");
+            },
+            //封装ajax向后台请求数据的方法
+            getAjax() {
+                //向后台发送ajax请求
+                $.get('/users/list', (data) => {
+                    this.tableData = data;
+                })
+            }
+        },
+        //视图挂载完毕的钩子函数
+        mounted() {
+            var _this = this;
+            //调用ajax方法
+            this.getAjax();
+        }
+    })
+
+
+</script>
+
+</html>

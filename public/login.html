@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——登录</title>
+    <!-- 引入ElementUI -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入自定义css -->
+    <link rel="stylesheet" href="./styles/login.css">
+</head>
+
+<body>
+    <div id="app">
+        <el-card class="box-card">
+            <!-- 标题 -->
+            <div slot="header" class="clearfix">
+                <h1><span class="el-icon-d-arrow-right"></span>登录超市管理系统</h1>
+            </div>
+            <!-- 账户密码输入框 -->
+            <div class="text item">
+                <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="用户名" prop="username">
+                        <el-input type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="pass">
+                        <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                        <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-card>
+    </div>
+    <!-- 引入jQuery -->
+    <script src="./javascripts/jquery.min.js"></script>
+    <!-- 引入Vue -->
+    <script src="./javascripts/vue.min.js"></script>
+    <!-- 引入ElementUI -->
+    <script src="./javascripts/elementUI.js"></script>
+    <script>
+        //创建Vue实例
+        new Vue({
+            el: "#app",
+            data:{
+                // return {
+                    ruleForm: {
+                        username: '',
+                        pass: '',
+                    },
+                    rules: {
+                        username:[
+                            {required:true,message:'请输入用户名',trigger:'blur'},
+                            {min:8,max:16,message:'用户名必须在8~12位',trigger:'blur'}
+                        ],
+                        pass: [
+                            {required: true, message: '请输入密码', trigger: 'blur'}
+                        ]
+                    }
+                // };
+            },
+            methods: {
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            alert('submit!');
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    //$refs是Vue中的一个方法，用来收集有ref属性的集合
+                    this.$refs[formName].resetFields();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

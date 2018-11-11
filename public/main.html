@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——首页</title>
+    <!-- 引入重置样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入ElementUI -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入自定义css -->
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 详细内容 -->
+        <el-main>
+            <!-- 大卡片 -->
+            <el-card class="box-card">
+                <!-- 大卡片标题 -->
+                <div slot="header" class="clearfix">
+                    <span>系统信息</span>
+                </div>
+                <!-- 大卡片内容 -->
+                <div class="text item">
+                    <!-- 消息框 -->
+                    <el-alert title="商品总数" type="info" show-icon>
+                    </el-alert>
+                    <el-alert id="importAlert" title="导入数据" type="info" :closable="false" show-icon>
+                    </el-alert>
+
+                    <el-row :gutter='20'>
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple">
+                                <!-- 小卡片1 -->
+                                <el-card class="box-card">
+                                    <!-- 小卡片1标题 -->
+                                    <div slot="header" class="clearfix">
+                                        <span>销售排行</span>
+                                    </div>
+                                    <!-- 小卡片1的表格数据 -->
+                                    <div class="text item">
+                                        <template>
+                                            <el-table :data="tableData" stripe style="width: 100%">
+                                                <el-table-column prop="date" label="日期" width="180">
+                                                </el-table-column>
+                                                <el-table-column prop="name" label="姓名" width="180">
+                                                </el-table-column>
+                                                <el-table-column prop="address" label="地址">
+                                                </el-table-column>
+                                            </el-table>
+                                        </template>
+                                    </div>
+                                </el-card>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-light">
+                                <!-- 小卡片2 -->
+                                <el-card class="box-card">
+                                    <!-- 小卡片2标题 -->
+                                    <div slot="header" class="clearfix">
+                                        <span>缺货的商品</span>
+                                    </div>
+                                    <!-- 小卡片2的表格数据 -->
+                                    <div class="text item">
+                                        <template>
+                                            <el-table :data="tableData" stripe style="width: 100%">
+                                                <el-table-column prop="date" label="日期" width="180">
+                                                </el-table-column>
+                                                <el-table-column prop="name" label="姓名" width="180">
+                                                </el-table-column>
+                                                <el-table-column prop="address" label="地址">
+                                                </el-table-column>
+                                            </el-table>
+                                        </template>
+                                    </div>
+                                </el-card>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+</body>
+<!-- 引入jQuery -->
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 引入Vue -->
+<script src="./javascripts/vue.min.js"></script>
+<!-- 引入ElementUI -->
+<script src="./javascripts/elementUI.js"></script>
+<script>
+    //实例化Vue
+    new Vue({
+        el: '#app',
+        data: {
+            tableData: [{
+                date: '2016-05-02',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1518 弄'
+            }, {
+                date: '2016-05-04',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1517 弄'
+            }, {
+                date: '2016-05-01',
+                name: '王小虎',
+                address: '上海市普陀区金沙江路 1519 弄'
+            }]
+        }
+    })
+</script>
+
+</html>

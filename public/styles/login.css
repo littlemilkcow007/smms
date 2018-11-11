@@ -1,0 +1,41 @@
+@charset 'utf-8';
+/* 卡片组件的样式 */
+.text {
+    font-size: 14px;
+  }
+.item {
+    margin-bottom: 18px;
+}
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+.clearfix:after {
+    clear: both
+}
+/* 卡片居中 */
+.box-card {
+    width: 480px;
+    height: 300px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto
+}
+.el-card__header{
+    padding: 10px
+}
+.el-card__header h1{
+    font-size: 20px
+}
+.el-input {
+    width: 300px
+}
+body{
+    background: url('../images/5.jpg') no-repeat;
+    background-size: 100% auto;
+}
+

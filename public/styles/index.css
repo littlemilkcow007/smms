@@ -1,0 +1,158 @@
+@charset 'utf-8';
+/* Container布局 */
+.el-header, .el-footer {
+    color: #333;
+    line-height: 30px;
+  }
+  .el-main {
+    color: #333;
+  }
+  
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+  /* 卡片样式 */
+  .text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  /* 自定义样式 */
+  html,body,#app,.el-container{
+      height: 100%
+  }
+  /* 左侧导航栏 */
+  .el-aside{
+    background: url('../images/bg_aside.jpg') repeat-y;
+    color: #fff;
+  }
+  .el-aside a{
+    color: #fff;
+    text-decoration: none
+  }
+  #navTitle h2{
+    font-size: 22px;
+    text-align: right;
+    padding: 40px 10px;
+  }
+  #navTitle p{
+    text-align: right;
+    padding-right: 20px;
+    font-size: 14px;
+    margin-bottom: 20px
+  }
+  .el-menu{
+    border: none;
+    background-color: transparent
+  }
+.el-submenu{
+    background: url('../images/bg_asideTitle.jpg') repeat-x;
+    width: 210px;
+    margin-left: 20px;
+    text-align: right;
+    border-radius: 3px 0 0 3px;
+    margin-bottom: 10px
+}
+.el-submenu__title{
+  height: 33px;
+  line-height: 33px;
+  color: #fff
+}
+.el-submenu__icon-arrow{
+  display: none
+}
+.el-submenu__title:hover{
+  background:transparent
+}
+.el-submenu .el-menu-item{
+  color: #aaa;
+  background-color: transparent;
+  padding-right: 20px;
+  height: 30px;
+  line-height: 30px
+}
+.el-submenu .el-menu-item a{
+  color: #aaa
+}
+.el-menu-item.is-active a{
+  font-weight: bold;
+  color: #fff
+}
+.el-menu-item.is-active{
+  font-weight: bold;
+  color: #fff
+}
+.el-menu-item:hover{
+  background:rgb(255,255,255,0.2);
+  font-weight: bold
+}
+  /* 右侧 */
+  .el-container{
+    background-color: #fafafa
+  }
+  .el-header h2{
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 30px
+  }
+  /* , .el-main */
+  .el-aside{
+    -overflow:visible
+  }
+  /* 管理首页页面样式 */
+  .el-main .el-card__header{
+    height: 40px;
+    line-height: 40px;
+    padding: 0px 20px;
+
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #ebebeb
+  }
+  #importAlert{
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+}
+.el-alert{
+  background-color:#dbe3ff;
+  border:1px solid #a2b4ee
+}
+/* 添加管理员账号页面 */
+.el-input{
+  width: 50%
+}
+.el-select .el-input{
+  width: 100%
+}
+textarea{
+  width: 50% !important
+}
+.slKeyWord .el-form-item__content{
+  width: 600px
+}
+.orderdetailsNum .el-input{
+  width: 100%
+}
+th .cell{
+  font-weight: bold
+}
+/* 尾部样式 */
+.el-footer p{
+  border-top: solid 1px #ccc;
+  line-height: 50px;
+  font-size: 12px
+}

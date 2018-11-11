@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——修改管理员账号</title>
+    <!-- 引入reset样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUi样式 -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入index.css -->
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 详细内容 -->
+        <el-main>
+            <!-- 大卡片 -->
+            <el-card class="box-card">
+                <!-- 大卡片标题 -->
+                <div slot="header" class="clearfix">
+                    <span>修改管理员账号</span>
+                </div>
+                <!-- 大卡片内容 -->
+                <div class="text item">
+                    <el-form label-position="top" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+                        label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="用户名：" prop="username">
+                            <el-input v-model="ruleForm2.username"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码：" prop="pass">
+                            <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码：" prop="checkPass">
+                            <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="选择用户组：" prop="group">
+                            <el-select v-model="ruleForm2.group" placeholder="请选择">
+                                    <el-option value="超级管理员">超级管理员</el-option>
+                                    <el-option value="管理员">管理员</el-option>
+                                    <el-option value="普通用户">普通用户</el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">修改</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+</body>
+<!-- 引入jQuery.js -->
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 引入Vue.js -->
+<script src="./javascripts/vue.min.js"></script>
+<!-- 引入elementUI.js -->
+<script src="./javascripts/elementUI.js"></script>
+<script>
+    //实例化Vue对象
+    new Vue({
+        el: '#app',
+        data() {
+             //自定义验证方法，判断密码和确认密码是否相等
+             var validatePass2 = (rule, value, callback) => {
+                    //如果密码和确认密码不相同，就抛出错误
+                    if (value !== this.ruleForm2.pass) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+            return {
+                ruleForm2: {
+                    pass: '',
+                    checkPass: '',
+                    username: '',
+                    group:''
+                },
+                rules2: {
+                    username: [
+                        { required: true, message: "请输入用户名", trigger: 'blur' },
+                        { min: 5, max: 18, message: "用户名长度必须在5~18位之间", trigger: "blur" }
+                    ],
+                    pass: [
+                        { required: true, message: "请输入密码", trigger: 'blur' },
+                        { min: 6, max: 12, message: "密码长度必须在6~12位之间", trigger: "blur" }
+                    ],
+                    checkPass: [
+                        { required: true, message: "请输入确认密码", trigger: 'blur' },
+                        { validator: validatePass2,trigger: 'blur' }
+                    ],
+                    group: [
+                        { required: true, message: "请选择用户组", trigger: 'blur' }
+                    ],
+                }
+            };
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                       //验证成功时执行
+                       $.post('/users/add',this.ruleForm2,(data)=>{
+                           if(data.isOk){
+                               alert(data.msg);
+                               //跳转到账号管理页面
+                               location.href='member_list.html';
+                           }else{
+                               alert(data.msg);
+                           }
+                       })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        },
+        mounted(){
+            //获取地址栏的参数id
+            let index=(location.href.indexOf('=')+1);
+            let id=location.href.substr(index);
+            //向后端请求数据填入表单
+            $.get('/users/getById/'+id,(data)=>{
+                
+            })
+        }
+    })
+</script>
+
+</html>

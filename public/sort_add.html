@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——添加分类</title>
+    <!-- 引入reset样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUi样式 -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入index.css -->
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 详细内容 -->
+        <el-main>
+            <!-- 大卡片 -->
+            <el-card class="box-card">
+                <!-- 大卡片标题 -->
+                <div slot="header" class="clearfix">
+                    <span>添加分类</span>
+                </div>
+                <!-- 大卡片内容 -->
+                <div class="text item">
+                    <el-form label-position="top" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+                        label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="所属分类：" prop="sortPart">
+                            <el-select v-model="ruleForm2.sortPart" filterable placeholder="---请选择分类---">
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="分类名称：" prop="sortName">
+                            <el-input v-model="ruleForm2.sortName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="状态：" prop="sortStatus">
+                            <el-radio v-model="ruleForm2.radio" label="1">启用</el-radio>
+                            <el-radio v-model="ruleForm2.radio" label="2">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">添加</el-button>
+                            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+</body>
+<!-- 引入jQuery.js -->
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 引入Vue.js -->
+<script src="./javascripts/vue.min.js"></script>
+<!-- 引入elementUI.js -->
+<script src="./javascripts/elementUI.js"></script>
+<script>
+    //读取数据
+    //定义变量存储数据
+    let tableData;
+    $.get('/users/list', (data) => {
+        tableData = data;
+    })
+    //实例化Vue对象
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                ruleForm2: {
+                    sortPart:'',
+                    sortName: '',
+                    sortStatus: '',
+                    radio: '1'
+                },
+                rules2: {
+                    sortName: [
+                        { required: true, message: "请输入分类名称", trigger: 'blur' }
+                    ]
+                },
+                options: [{
+                    value: '选项1',
+                    label: '黄金糕'
+                }, {
+                    value: '选项2',
+                    label: '双皮奶'
+                }, {
+                    value: '选项3',
+                    label: '蚵仔煎'
+                }, {
+                    value: '选项4',
+                    label: '龙须面'
+                }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                }],
+            };
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        }
+    })
+</script>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>超市管理系统——添加会员账号</title>
+    <!-- 引入reset样式 -->
+    <link rel="stylesheet" href="./styles/reset.css">
+    <!-- 引入elementUi样式 -->
+    <link rel="stylesheet" href="./styles/elementUI.css">
+    <!-- 引入index.css -->
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- 详细内容 -->
+        <el-main>
+            <!-- 大卡片 -->
+            <el-card class="box-card">
+                <!-- 大卡片标题 -->
+                <div slot="header" class="clearfix">
+                    <span>添加会员账号</span>
+                </div>
+                <!-- 大卡片内容 -->
+                <div class="text item">
+                    <el-form label-position="right" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+                        label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="真实名字：" prop="realname">
+                            <el-input v-model="ruleForm2.realname"></el-input>
+                        </el-form-item>
+                        <el-form-item label="会员卡卡号" prop="cardNum">
+                            <el-input type="text" v-model="ruleForm2.cardNum" autocomplete="on"></el-input>
+                        </el-form-item>
+         <!--            </el-form>
+                    <el-form label-position="right" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
+                        label-width="100px" class="demo-ruleForm"> -->
+                        <el-form-item label="用户组：" prop="group">
+                            <el-select v-model="ruleForm2.group" placeholder="请选择">
+                                <el-option value="超级管理员">超级会员</el-option>
+                                <el-option value="管理员">普通会员</el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="身份证号：" prop="idNum">
+                            <el-input v-model="ruleForm2.idNum"></el-input>
+                        </el-form-item>
+                        <el-form-item label="用户状态：" prop="userStatus">
+                            <el-radio v-model="ruleForm2.userStatus " label="1">启用</el-radio>
+                            <el-radio v-model="ruleForm2.userStatus" label="2">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="手机号码：" prop="phoneNum">
+                            <el-input type="text" v-model="ruleForm2.phoneNum"></el-input>
+                        </el-form-item>
+                        <el-form-item label="座机号码：" prop="telephoneNum">
+                            <el-input type="text" v-model="ruleForm2.telephoneNum"></el-input>
+                        </el-form-item>
+                        <el-form-item label="邮箱地址：" prop="email">
+                            <el-input type="text" v-model="ruleForm2.email"></el-input>
+                        </el-form-item>
+                        <el-form-item label="地区选择：" prop="email">
+                            <el-select v-model="ruleForm2.province" placeholder="---请选择省份---">
+                                <el-option label="区域一" value="上海"></el-option>
+                                <el-option label="区域二" value="北京"></el-option>
+                            </el-select>
+                            <el-select v-model="ruleForm2.city" placeholder="---请选择城市---">
+                                <el-option label="区域一" value="浦东新区"></el-option>
+                                <el-option label="区域二" value="北京市"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="详细地址：" prop="detailedAddress">
+                                <el-input type="text" v-model="ruleForm2.detailedAddress"></el-input>
+                            </el-form-item>
+                        <el-form-item label="邮政编码：" prop="postalCode">
+                                <el-input type="text" v-model="ruleForm2.postalCode"></el-input>
+                            </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">添加</el-button>
+                            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+</body>
+<!-- 引入jQuery.js -->
+<script src="./javascripts/jquery.min.js"></script>
+<!-- 引入Vue.js -->
+<script src="./javascripts/vue.min.js"></script>
+<!-- 引入elementUI.js -->
+<script src="./javascripts/elementUI.js"></script>
+<script>
+    //实例化Vue对象
+    new Vue({
+        el: '#app',
+        data() {
+            var validatePass2 = (rule, value, callback) => {
+                if (value !== this.ruleForm2.pass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                ruleForm2: {
+                    realname: '', //真实名字
+                    cardNum: '', //会员卡卡号
+                    group: '', //用户组
+                    idNum: '', //身份证号
+                    userStatus: '2', //用户状态
+                    phoneNum: '', //手机号码
+                    telephoneNum: '', //座机号码
+                    email: '', //邮箱地址
+                    province: '', //省份
+                    city: '', //城市
+                    detailedAddress: '', //详细地址
+                    postalCode: '', //邮政编码                 
+                },
+                rules2: {
+                    realname: [
+                        { required: true, message: "请输入真实名字", trigger: 'blur' }
+                    ],
+                    cardNum: [
+                        { required: true, message: "请输入会员卡卡号", trigger: 'blur' }
+                    ],
+                    group: [
+                        { required: true, message: "请选择用户组", trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        //验证成功时执行
+                        $.post('/users/add', this.ruleForm2, (data) => {
+                            console.log(data);
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        }
+    })
+</script>
+
+</html>
