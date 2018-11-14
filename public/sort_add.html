@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -71,7 +73,7 @@
         data() {
             return {
                 ruleForm2: {
-                    sortPart:'',
+                    sortPart: '',
                     sortName: '',
                     sortStatus: '1'
                 },
@@ -80,10 +82,10 @@
                         { required: true, message: "请输入分类名称", trigger: 'blur' }
                     ],
                     sortPart: [
-                        { required: true, message: "请选择分类", trigger: 'blur' }
+                        { required: true, message: "请选择分类", trigger: 'change' }
                     ]
                 },
-                options:[]
+                options: []
             };
         },
         methods: {
@@ -91,13 +93,13 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         //前端验证成功时向后台请求数据
-                        $.get('/sort/add',this.ruleForm2,(data)=>{
+                        $.get('/sort/add', this.ruleForm2, (data) => {
                             //处理数据
-                            if(data.isOk){
-                                alert('添加成功');
-                                location.href='sort_list.html';
-                            }else{
-                                alert('添加失败');
+                            if (data.isOk) {
+                                alert(data.msg);
+                                location.href = 'sort_list.html';
+                            } else {
+                                alert(data.msg);
                             }
                         })
                     } else {
@@ -110,9 +112,9 @@
                 this.$refs[formName].resetFields();
             }
         },
-        mounted(){
-            $.get('/sort/getSort',(data)=>{
-                this.options=data;               
+        mounted() {
+            $.get('/sort/getSort', (data) => {
+                this.options = data;
             })
         }
     })

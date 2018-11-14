@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -39,9 +41,9 @@
                         </el-form-item>
                         <el-form-item label="选择用户组：" prop="group">
                             <el-select v-model="ruleForm2.group" placeholder="请选择">
-                                    <el-option value="超级管理员">超级管理员</el-option>
-                                    <el-option value="管理员">管理员</el-option>
-                                    <el-option value="普通用户">普通用户</el-option>
+                                <el-option value="超级管理员">超级管理员</el-option>
+                                <el-option value="管理员">管理员</el-option>
+                                <el-option value="普通用户">普通用户</el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item>
@@ -64,23 +66,23 @@
     new Vue({
         el: '#app',
         data() {
-             //自定义验证方法，判断密码和确认密码是否相等
-             var validatePass2 = (rule, value, callback) => {
-                    //如果密码和确认密码不相同，就抛出错误
-                    if (value !== this.ruleForm2.pass) {
-                        callback(new Error('两次输入密码不一致!'));
-                    } else {
-                        callback();
-                    }
-                };
+            //自定义验证方法，判断密码和确认密码是否相等
+            var validatePass2 = (rule, value, callback) => {
+                //如果密码和确认密码不相同，就抛出错误
+                if (value !== this.ruleForm2.pass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 ruleForm2: {
                     pass: '',
                     checkPass: '',
                     username: '',
-                    group:'',
-                    oldPwd:'', //暂存旧密码
-                    u_id:0
+                    group: '',
+                    oldPwd: '', //暂存旧密码
+                    u_id: 0
                 },
                 rules2: {
                     username: [
@@ -93,7 +95,7 @@
                     ],
                     checkPass: [
                         { required: true, message: "请输入确认密码", trigger: 'blur' },
-                        { validator: validatePass2,trigger: 'blur' }
+                        { validator: validatePass2, trigger: 'blur' }
                     ],
                     group: [
                         { required: true, message: "请选择用户组", trigger: 'blur' }
@@ -105,17 +107,17 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                       //验证成功时执行将数据回填到数据库
-                       $.post('/users/edit',this.ruleForm2,(data)=>{
+                        //验证成功时执行将数据回填到数据库
+                        $.post('/users/edit', this.ruleForm2, (data) => {
                             //接收后端返回的数据进行处理
-                            if(data.isOk){
+                            if (data.isOk) {
                                 alert(data.msg);
                                 //跳转到账号管理页面
-                                location.href='member_list.html';
-                            }else{
+                                location.href = 'member_list.html';
+                            } else {
                                 alert(data.msg);
                             }
-                       })
+                        })
 
                     } else {
                         console.log('error submit!!');
@@ -124,20 +126,20 @@
                 });
             }
         },
-        mounted(){
+        mounted() {
             //获取地址栏的参数id
-            let index=(location.href.indexOf('=')+1);
-            let id=location.href.substr(index);
+            let index = (location.href.indexOf('=') + 1);
+            let id = location.href.substr(index);
             //向后端请求数据填入表单
-            $.get('/users/getById/'+id,(data)=>{
+            $.get('/users/getById/' + id, (data) => {
                 //将后端发送回来的数据进行处理
-                 this.ruleForm2.pass=data[0].userPwd;
-                 this.ruleForm2.checkPass=data[0].userPwd;
-                 this.ruleForm2.username=data[0].userName;
-                 this.ruleForm2.group=data[0].userGroup;      
-                 this.ruleForm2.oldPwd=data[0].userPwd;      
-                 this.ruleForm2.u_id=data[0].u_id; 
-                 console.log(this.ruleForm2.u_id)     
+                this.ruleForm2.pass = data[0].userPwd;
+                this.ruleForm2.checkPass = data[0].userPwd;
+                this.ruleForm2.username = data[0].userName;
+                this.ruleForm2.group = data[0].userGroup;
+                this.ruleForm2.oldPwd = data[0].userPwd;
+                this.ruleForm2.u_id = data[0].u_id;
+                console.log(this.ruleForm2.u_id)
 
             })
         }

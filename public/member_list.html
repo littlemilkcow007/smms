@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -92,7 +94,7 @@
         },
         methods: {
             handleEdit(id) {
-                location.href=`member_edit.html?id=${id}`;
+                location.href = `member_edit.html?id=${id}`;
             },
             handleDelete(id) {
                 //发送ajax请求到后端路由处理数据删除

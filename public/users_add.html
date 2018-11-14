@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -34,7 +36,7 @@
                         <el-form-item label="会员卡卡号" prop="cardNum">
                             <el-input type="text" v-model="ruleForm2.cardNum" autocomplete="on"></el-input>
                         </el-form-item>
-         <!--            </el-form>
+                        <!--            </el-form>
                     <el-form label-position="right" :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2"
                         label-width="100px" class="demo-ruleForm"> -->
                         <el-form-item label="用户组：" prop="group">
@@ -70,11 +72,11 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="详细地址：" prop="detailedAddress">
-                                <el-input type="text" v-model="ruleForm2.detailedAddress"></el-input>
-                            </el-form-item>
+                            <el-input type="text" v-model="ruleForm2.detailedAddress"></el-input>
+                        </el-form-item>
                         <el-form-item label="邮政编码：" prop="postalCode">
-                                <el-input type="text" v-model="ruleForm2.postalCode"></el-input>
-                            </el-form-item>
+                            <el-input type="text" v-model="ruleForm2.postalCode"></el-input>
+                        </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="submitForm('ruleForm2')">添加</el-button>
                             <el-button @click="resetForm('ruleForm2')">重置</el-button>
@@ -137,9 +139,9 @@
                     if (valid) {
                         //验证成功时执行
                         $.post('/users/add', this.ruleForm2, (data) => {
-                            if(data.isOk){
+                            if (data.isOk) {
                                 console.log(data)
-                            }else{
+                            } else {
                                 alert(data.msg);
                             }
                         })

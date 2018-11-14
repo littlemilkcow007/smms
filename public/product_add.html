@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -30,19 +32,19 @@
                         label-width="100px" class="demo-ruleForm">
                         <el-form-item label="所属分类：" prop="productPart">
                             <el-select v-model="ruleForm2.productPart" filterable placeholder="---请选择分类---">
-                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                <el-option v-for="(item,index) in options" :key="index" :label="item.cg_name" :value="item.cg_id">
                                 </el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="商品条形码：" prop="barCode">
                             <el-input v-model="ruleForm2.barCode"></el-input>
-                            <el-button type="success">生成条形码</el-button>
+                            <el-button type="success" @click='buildCode'>生成条形码</el-button>
                         </el-form-item>
                         <el-form-item label="商品名称：" prop="productName">
                             <el-input v-model="ruleForm2.productName"></el-input>
                         </el-form-item>
                         <el-form-item label="商品售价：" prop="productPrice">
-                            <el-input v-model="ruleForm2.productPrice"></el-input> 元
+                            <el-input v-model="ruleForm2.productPrice" @blur='getPrice'></el-input> 元
                         </el-form-item>
                         <el-form-item label="市场价：" prop="marketPrice">
                             <el-input v-model="ruleForm2.marketPrice"></el-input> 元
@@ -63,11 +65,11 @@
                         </el-form-item>
                         <el-form-item label="会员优惠：" prop="isDiscounts">
                             <el-radio v-model="ruleForm2.isDiscounts" label="1">享受</el-radio>
-                            <el-radio v-model="ruleForm2.isDiscounts" label="2">不享受</el-radio>
+                            <el-radio v-model="ruleForm2.isDiscounts" label="0">不享受</el-radio>
                         </el-form-item>
                         <el-form-item label="是否促销：" prop="isPromotion">
                             <el-radio v-model="ruleForm2.isPromotion " label="1">启用</el-radio>
-                            <el-radio v-model="ruleForm2.isPromotion" label="2">禁用</el-radio>
+                            <el-radio v-model="ruleForm2.isPromotion" label="0">禁用</el-radio>
                         </el-form-item>
                         <el-form-item label="商品简介：" prop="productIntro">
                             <el-input type="textarea" :rows="4" placeholder="请输入商品简介" v-model="ruleForm2.productIntro"></el-input>
@@ -106,52 +108,44 @@
                     barCode: '',  //条形码
                     productName: '', //商品名称
                     productPrice: '', //商品售价
-                    MarketPrice: '', //市场价
-                    purchasePrice: '', //商品进价
+                    marketPrice: '0', //市场价
+                    purchasePrice: '0', //商品进价
                     storageNum: '', //入库数量
                     productWeight: '', //商品重量
                     productUnit: '', //商品单位
-                    isDiscounts: '1', //是否会员优惠
-                    isPromotion: '2', //是否促销
-                    productIntro:'' //商品简介
+                    isDiscounts: '0', //是否会员优惠
+                    isPromotion: '0', //是否促销
+                    productIntro: '' //商品简介
                 },
                 rules2: {
                     productPart: [
-                        { required: true, message: "请输入分类名称", trigger: 'blur' }
+                        { required: true, message: "请选择分类名称", trigger: 'blur' }
                     ],
                     barCode: [
-                        { required: true, message: "请输入分类名称", trigger: 'blur' }
+                        { required: true, message: "请输入商品条形码", trigger: 'change' }
                     ],
                     productName: [
-                        { required: true, message: "请输入分类名称", trigger: 'blur' }
+                        { required: true, message: "请输入商品名称", trigger: 'blur' }
                     ],
                     productPrice: [
-                        { required: true, message: "请输入分类名称", trigger: 'blur' }
+                        { required: true, message: "请输入商品售价", trigger: 'blur' }
                     ]
                 },
-                options: [{
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
+                options: [],
             };
         },
         methods: {
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        $.post('/product/add', this.ruleForm2, (data) => {
+                            if (data.isOk) {
+                                alert(data.msg);
+                                location.href = 'product_list.html';
+                            } else {
+                                alert(data.msg);
+                            }
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -160,7 +154,25 @@
             },
             resetForm(formName) {
                 this.$refs[formName].resetFields();
+            },
+            //生成条形码
+            buildCode() {
+                this.ruleForm2.barCode = new Date().getTime()
+            },
+            //根据进价自动计算售价和市场价
+            getPrice() {
+                if (this.ruleForm2.productPrice != '') {
+                    this.ruleForm2.productPrice = parseFloat(this.ruleForm2.productPrice).toFixed(2);
+                    this.ruleForm2.marketPrice = (this.ruleForm2.productPrice * 1.2).toFixed(2);
+                    this.ruleForm2.purchasePrice = (this.ruleForm2.marketPrice * 0.9).toFixed(2);
+                }
             }
+        },
+        mounted() {
+            //获取商品分类
+            $.get('/sort/getSort', (data) => {
+                this.options = data;
+            })
         }
     })
 </script>

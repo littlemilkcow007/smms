@@ -150,6 +150,10 @@ textarea{
 th .cell{
   font-weight: bold
 }
+.cRed{
+  color: rgb(250, 96, 96);
+  font-weight: bold
+}
 /* 尾部样式 */
 .el-footer p{
   border-top: solid 1px #ccc;

@@ -126,7 +126,7 @@ router.post('/loginCheck', (req, res, next) => {
       //写入cookie
       res.cookie('userName', username);
       res.cookie('u_id', result[0].u_id);
-      res.send({ 'isOk': true, 'msg': '登录成功' });
+      res.send({ 'isOk': true, 'msg': '登录成功'});
     } else {
       res.send({ 'isOk': false, 'msg': '账号或者密码错误' })
     }
@@ -143,10 +143,11 @@ router.get('/loginOut', (req, res, next) => {
 /* 建围墙避免用户输入网址随意进入 */
 router.get('/checkState', (req, res, next) => {
   //读取cookie
-  var username=req.cookies.username;
+  var username=req.cookies.userName;
   //如果不存在就跳转到登录页面
-  if(!username){
-    res.send('alert("请先登录");location.href="login.html"')
+  if(!username){ 
+   res.send('alert("请先登录");location.href="login.html"');
+ // res.redirect('/login.html');
   }else{
     res.send("");
   }

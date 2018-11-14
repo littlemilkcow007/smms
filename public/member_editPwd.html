@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -89,10 +91,10 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                       //验证成功时执行
-                       $.post('/users/add',this.ruleForm2,(data)=>{
-                           console.log(data);
-                       })
+                        //验证成功时执行
+                        $.post('/users/add', this.ruleForm2, (data) => {
+                            console.log(data);
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -39,9 +41,9 @@
                         </el-form-item>
                         <el-form-item label="选择用户组：" prop="group">
                             <el-select v-model="ruleForm2.group" placeholder="请选择">
-                                    <el-option value="超级管理员">超级管理员</el-option>
-                                    <el-option value="管理员">管理员</el-option>
-                                    <el-option value="普通用户">普通用户</el-option>
+                                <el-option value="超级管理员">超级管理员</el-option>
+                                <el-option value="管理员">管理员</el-option>
+                                <el-option value="普通用户">普通用户</el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item>
@@ -65,21 +67,21 @@
     new Vue({
         el: '#app',
         data() {
-             //自定义验证方法，判断密码和确认密码是否相等
-             var validatePass2 = (rule, value, callback) => {
-                    //如果密码和确认密码不相同，就抛出错误
-                    if (value !== this.ruleForm2.pass) {
-                        callback(new Error('两次输入密码不一致!'));
-                    } else {
-                        callback();
-                    }
-                };
+            //自定义验证方法，判断密码和确认密码是否相等
+            var validatePass2 = (rule, value, callback) => {
+                //如果密码和确认密码不相同，就抛出错误
+                if (value !== this.ruleForm2.pass) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 ruleForm2: {
                     pass: '',
                     checkPass: '',
                     username: '',
-                    group:''
+                    group: ''
                 },
                 rules2: {
                     username: [
@@ -92,7 +94,7 @@
                     ],
                     checkPass: [
                         { required: true, message: "请输入确认密码", trigger: 'blur' },
-                        { validator: validatePass2,trigger: 'blur' }
+                        { validator: validatePass2, trigger: 'blur' }
                     ],
                     group: [
                         { required: true, message: "请选择用户组", trigger: 'blur' }
@@ -104,16 +106,16 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                       //验证成功时执行
-                       $.post('/users/add',this.ruleForm2,(data)=>{
-                           if(data.isOk){
-                               alert(data.msg);
-                               //跳转到账号管理页面
-                               location.href='member_list.html';
-                           }else{
-                               alert(data.msg);
-                           }
-                       })
+                        //验证成功时执行
+                        $.post('/users/add', this.ruleForm2, (data) => {
+                            if (data.isOk) {
+                                alert(data.msg);
+                                //跳转到账号管理页面
+                                location.href = 'member_list.html';
+                            } else {
+                                alert(data.msg);
+                            }
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;

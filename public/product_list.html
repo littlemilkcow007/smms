@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="./styles/elementUI.css">
     <!-- 引入index.css -->
     <link rel="stylesheet" href="./styles/index.css">
+    <!-- 引入围墙 -->
+    <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -27,15 +29,15 @@
                 <!-- 大卡片内容 -->
                 <div class="text item">
                     <!-- 搜索 -->
-                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                    <el-form :inline="true" :model="pageSearchData" class="demo-form-inline">
                         <el-form-item>
-                            <el-select v-model="formInline.region" placeholder="---选择分类---">
-                                <el-option label="分类一" value="shanghai"></el-option>
-                                <el-option label="分类二" value="beijing"></el-option>
+                            <el-select v-model="pageSearchData.sort" placeholder="---选择分类---">
+                                <el-option v-for="(item,index) in options" :key="index" :label="item.cg_name" :value="item.cg_id">
+                                </el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="关键字">
-                            <el-input v-model="formInline.user" placeholder=""></el-input> （商品名称，条形码）
+                            <el-input v-model="pageSearchData.keyWords" placeholder=""></el-input> （商品名称，条形码）
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -43,51 +45,56 @@
                     </el-form>
                     <!-- 数据中心 -->
                     <el-table :data="tableData" style="width: 100%" stripe="true">
-                        <el-table-column label="商品条形码" width="180">
+                        <el-table-column label="商品编号" width="80">
                             <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                                <span style="margin-left: 10px">{{ scope.row.goods_id }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="商品名称" width="180">
+                        <el-table-column label="商品条形码" width="180">
                             <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                                <span style="margin-left: 10px">{{ scope.row.barcode }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="商品名称" width="200">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.goodsname }}</span>
                             </template>
                         </el-table-column>
                         <el-table-column label="所属分类" width="180">
                             <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                                <span style="margin-left: 10px">{{ scope.row.fatherName }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="售价（元）" width="180">
+                        <el-table-column label="售价（元）" width="100">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px" class="cRed">{{ scope.row.goodsprice | formatPrice }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="促销价（元）" width="120">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.saleprice | formatPrice}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="市场价（元）" width="120">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.marketprice | formatPrice }}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="库存" width="80">
+                            <template slot-scope="scope">
+                                <span style="margin-left: 10px">{{ scope.row.stockNum }}</span>
+                            </template>
+                        </el-table-column>
+                        <!--                         <el-table-column label="库存总额（元）" width="140">
                             <template slot-scope="scope">
                                 <span style="margin-left: 10px">{{ scope.row.name }}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="促销价（元）" width="180">
+                        <el-table-column label="销售总额（元）" width="140">
                             <template slot-scope="scope">
                                 <span style="margin-left: 10px">{{ scope.row.name }}</span>
                             </template>
-                        </el-table-column>
-                        <el-table-column label="市场价（元）" width="180">
-                            <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="库存" width="180">
-                            <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="库存总额（元）" width="180">
-                            <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="销售总额（元）" width="180">
-                            <template slot-scope="scope">
-                                <span style="margin-left: 10px">{{ scope.row.name }}</span>
-                            </template>
-                        </el-table-column>
+                        </el-table-column> -->
                         <el-table-column label="管理" fixed="right" width="180px">
                             <template slot-scope="scope">
                                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="primary"
@@ -99,7 +106,9 @@
                     </el-table>
                     <br>
                     <!-- 页码 -->
-                    <el-pagination background layout="prev, pager, next" :total="40" prev-text='上一页' next-text='下一页'>
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" background
+                        :current-page="pageSearchData.currentPage" :page-sizes="[5, 10, 15, 20]" :page-size="pageSearchData.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper" :total="pageSearchData.total">
                     </el-pagination>
                 </div>
             </el-card>
@@ -119,32 +128,21 @@
     $.get('/users/list', (data) => {
         tableData = data;
     })
+    //cg_id,barcode,goodsname,goodsprice,marketprice,saleprice,stockNum,weigth,unit,discount,promotion,goodsDetails
     //实例化Vue对象
     new Vue({
         el: '#app',
         data() {
             return {
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
-                formInline: {
-                    user: '',
-                    region: ''
-                }
+                tableData: [],
+                pageSearchData: {
+                    pageSize: 5,
+                    total: 20,
+                    currentPage: 1,
+                    keyWords: '',
+                    sort: ''
+                },
+                options: [],
             }
         },
         methods: {
@@ -155,7 +153,33 @@
                 console.log(index, row);
             },
             onSubmit() {
-                console.log('submit!');
+                this.getProduct();
+            },
+            handleSizeChange(val) {
+                this.pageSearchData.pageSize = val;
+                this.getProduct();
+            },
+            handleCurrentChange(val) {
+                this.pageSearchData.currentPage = val;
+                this.getProduct();
+            },
+            getProduct() {
+                $.post('/product/list', this.pageSearchData, (data) => {
+                    this.pageSearchData.total = data.total;
+                    this.tableData = data.productList;
+                })
+            }
+        },
+        mounted() {
+            this.getProduct();
+            //获取商品分类
+            $.get('/sort/getSort', (data) => {
+                this.options = data;
+            })
+        },
+        filters: {
+            formatPrice(price) {
+                return price.toFixed(2);
             }
         }
 
